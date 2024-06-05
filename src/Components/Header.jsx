@@ -18,5 +18,5 @@ export default function Header() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
+  )
 }
