@@ -13,5 +13,5 @@ npm run dev
 Finally visit the following link in your browser :
 
 ```
-http://localhost:3000
+http://localhost:5173
 ```
