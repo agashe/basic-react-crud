@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <Navbar expand="lg" bg="primary" data-bs-theme="dark">
       <Container fluid>
-        <Navbar.Brand href="#home">Basic CRUD</Navbar.Brand>
+        <Navbar.Brand>Basic CRUD</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
