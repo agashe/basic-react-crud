@@ -1,11 +1,10 @@
-import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
 export default function Home() {
   return (
-    <Container>
+    <>
       <Card style={{ height: '200px', margin: '0 auto', textAlign: 'center' }}>
         <Card.Body>
           <Card.Title>
@@ -58,6 +57,6 @@ export default function Home() {
           </Card>
         </Col>
       </Row>
-    </Container>
+    </>
   )
 }
