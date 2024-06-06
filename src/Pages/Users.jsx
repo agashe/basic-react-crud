@@ -25,7 +25,7 @@ export default function Users() {
     axios.get(`/users?limit=${perPage}&skip=${(currentPage - 1) * perPage}&select=${fields.join(',')}`)
       .then(function (response) {
         setUsers(response.data.users)
-        setTotalPages(parseInt(response.data.total / perPage))
+        setTotalPages(parseInt(Math.ceil(response.data.total / perPage)))
       })
       .catch(function (error) {
         console.log(error)
