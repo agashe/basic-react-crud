@@ -1,18 +1,19 @@
-import FloatingLabel from 'react-bootstrap/FloatingLabel'
-import Table from 'react-bootstrap/Table'
-import Form from 'react-bootstrap/Form'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import PageBreadcrumb from '../Components/PageBreadcrumb'
 import PagePagination from '../Components/PagePagination'
+import UsersFilters from '../Components/UsersFilters'
+import DataTable from '../Components/DataTable'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 export default function Users() {
   const [users, setUsers] = useState([])
+  const [allUsers, setAllUsers] = useState([])
   const [perPage, setPerPage] = useState(5)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
+  const [totalAllPages, setTotalAllPages] = useState(0)
+  const [birthDateFilterValue, setBirthDateFilterValue] = useState('')
+  const [genderFilterValue, setGenderFilterValue] = useState('')
 
   const fields = [
     'id', 'firstName', 'lastName', 'age',
@@ -21,99 +22,96 @@ export default function Users() {
     'eyeColor'
   ]
 
-  useEffect(() => {
-    axios.get(`/users?limit=${perPage}&skip=${(currentPage - 1) * perPage}&select=${fields.join(',')}`)
+  let parameters = `limit=${perPage}&skip=${(currentPage - 1) * perPage}&select=${fields.join(',')}`
+
+  function fetchUsers(usersUrl = `/users?${parameters}`) {
+    axios.get(usersUrl)
       .then(function (response) {
         setUsers(response.data.users)
+        setAllUsers(response.data.users)
         setTotalPages(parseInt(Math.ceil(response.data.total / perPage)))
+        setTotalAllPages(parseInt(Math.ceil(response.data.total / perPage)))
       })
       .catch(function (error) {
         console.log(error)
       })
-  }, [currentPage])
-
-  function goToPage(page) { 
-    setCurrentPage(page) 
   }
+
+  function searchHandler(keyword) {
+    if (!keyword.trim()) {
+      setAllUsers(users)
+      setTotalAllPages(totalPages)
+      return
+    }
+
+    let filteredUsers = []
+
+    filteredUsers = users.filter((user) => {
+      return Object.keys(user).some(function(key) {
+        // we could make the search more flexible by
+        // using 'includes' , by updating the condition to :
+        // user[key].toString().includes(keyword)
+
+        // right now we search for the exact value !!
+        return user[key] == keyword
+      })
+    })
+
+    setAllUsers(filteredUsers)
+    setTotalAllPages(parseInt(Math.ceil(filteredUsers.length / perPage)))
+  }
+
+  function birthDateFilter(birthDate, page = 1) {
+    if (!birthDate) {
+      setCurrentPage(1)
+      fetchUsers()
+    }
+
+    setCurrentPage(page)
+    setGenderFilterValue('')
+    setBirthDateFilterValue(birthDate)
+    fetchUsers(`/users/filter?key=birthDate&value=${birthDate.replaceAll('-0', '-')}&${parameters}`)
+  }
+
+  function genderFilter(gender, page = 1) {
+    if (!gender) {
+      setCurrentPage(1)
+      fetchUsers()
+    }
+
+    setCurrentPage(page)
+    setBirthDateFilterValue('')
+    setGenderFilterValue(gender)
+    fetchUsers(`/users/filter?key=gender&value=${gender}&${parameters}`)
+  }
+
+  useEffect(() => {
+    if (birthDateFilterValue != '') {
+      birthDateFilter(birthDateFilterValue, currentPage)
+    }
+    else if (genderFilterValue != '') {
+      genderFilter(genderFilterValue, currentPage)
+    }
+    else {
+      fetchUsers()
+    }
+  }, [currentPage, perPage])
 
   return (
     <>
       <PageBreadcrumb page='Users' />
 
-      <Form>
-        <Row>
-          <Col>
-            <FloatingLabel label='Entries'>
-              <Form.Select defaultValue={perPage}>
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-              </Form.Select>
-            </FloatingLabel>
-          </Col>
-          <Col>
-            <FloatingLabel label='Search ...'>
-              <Form.Control placeholder="Enter something ..." />
-            </FloatingLabel>
-          </Col>
-          <Col>
-            <FloatingLabel label='Date of Birth'>
-              <Form.Control type="date" />
-            </FloatingLabel>
-          </Col>
-          <Col>
-            <FloatingLabel label='Gender'>
-              <Form.Select>
-                <option disabled selected>Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </Form.Select>
-            </FloatingLabel>
-          </Col>
-        </Row>
-      </Form>
+      <UsersFilters
+        perPage={perPage}
+        setPerPage={setPerPage}
+        searchHandler={searchHandler}
+        birthDateFilter={birthDateFilter}
+        genderFilter={genderFilter}
+      />
 
-      <Table bordered className='mt-3' responsive>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Maiden Name</th>
-            <th>Age</th>
-            <th>Gender</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Birth Date</th>
-            <th>Blood Group</th>
-            <th>Height</th>
-            <th>Weight</th>
-            <th>Eye Color</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users && users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.firstName}</td>
-              <td>{user.lastName}</td>
-              <td>{user.maidenName}</td>
-              <td>{user.age}</td>
-              <td>{user.gender}</td>
-              <td>{user.email}</td>
-              <td>{user.phone}</td>
-              <td>{user.birthDate}</td>
-              <td>{user.bloodGroup}</td>
-              <td>{user.height}</td>
-              <td>{user.weight}</td>
-              <td>{user.eyeColor}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <DataTable fields={fields} items={allUsers} />
 
-      <PagePagination current={currentPage} total={totalPages} handler={goToPage} />
+      <PagePagination current={currentPage} total={totalAllPages} handler={setCurrentPage} />
     </>
   )
 }

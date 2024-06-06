@@ -22,15 +22,15 @@ export default function App() {
     <Router>
       <Header />
 
-      <Container style={{height: '85vh'}} className='p-3'>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="users/*" element={<Users />} />
-          <Route path="products/*" element={<Products />} />
+      <Container style={{ minHeight: '85vh', height: '85vh' }} className='p-3'>
+        <Routes style={{ minHeight: '85vh', height: '85vh' }}>
+          <Route path='/' element={<Home />} />
+          <Route style={{ minHeight: '85vh', height: '85vh' }} path='users/*' element={<Users />} />
+          <Route path='products/*' element={<Products />} />
         </Routes>
+        
+        <Footer />
       </Container>
-
-      <Footer />
     </Router>
   )
 }
