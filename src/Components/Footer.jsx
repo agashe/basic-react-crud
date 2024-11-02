@@ -7,7 +7,7 @@ export default function Footer() {
     <Container fluid>
       <Row>
         <Col>
-          <p className='text-center'>Basic CRUD &copy; 2024</p>
+          <p className='text-center mt-1'>Basic CRUD &copy; 2024</p>
         </Col>
       </Row>
     </Container>

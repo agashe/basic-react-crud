@@ -16,7 +16,7 @@ export default function DataTable({ fields, items }) {
   }
 
   return (
-    <Table bordered className='mt-3' responsive>
+    <Table bordered hover className='mt-3' responsive>
       <thead>
         <tr>
           {fields && fields.map((field, i) => (

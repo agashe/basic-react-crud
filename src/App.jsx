@@ -23,9 +23,9 @@ export default function App() {
       <Header />
 
       <Container style={{ minHeight: '85vh', height: '85vh' }} className='p-3'>
-        <Routes style={{ minHeight: '85vh', height: '85vh' }}>
+        <Routes>
           <Route path='/' element={<Home />} />
-          <Route style={{ minHeight: '85vh', height: '85vh' }} path='users/*' element={<Users />} />
+          <Route path='users/*' element={<Users />} />
           <Route path='products/*' element={<Products />} />
         </Routes>
         

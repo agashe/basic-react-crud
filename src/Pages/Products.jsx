@@ -16,10 +16,10 @@ export default function Products() {
   const [categories, setCategories] = useState([])
 
   const fields = [
-    'id', 'title', 'description', 'category',
+    'id', 'title', 'category',
     'price', 'discountPercentage', 'rating', 'stock',
     'brand', 'sku', 'weight', 'availabilityStatus',
-    'returnPolicy'
+    'returnPolicy', 'warrantyInformation'
   ]
 
   let parameters = `limit=${perPage}&skip=${(currentPage - 1) * perPage}&select=${fields.join(',')}`
@@ -58,12 +58,7 @@ export default function Products() {
 
     filteredProducts = products.filter((product) => {
       return Object.keys(product).some(function (key) {
-        // we could make the search more flexible by
-        // using 'includes' , by updating the condition to :
-        // product[key].toString().includes(keyword)
-
-        // right now we search for the exact value !!
-        return product[key] == keyword
+        return product[key].toString().includes(keyword)
       })
     })
 

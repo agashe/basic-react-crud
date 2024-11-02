@@ -48,12 +48,7 @@ export default function Users() {
 
     filteredUsers = users.filter((user) => {
       return Object.keys(user).some(function(key) {
-        // we could make the search more flexible by
-        // using 'includes' , by updating the condition to :
-        // user[key].toString().includes(keyword)
-
-        // right now we search for the exact value !!
-        return user[key] == keyword
+        return user[key].toString().includes(keyword)
       })
     })
 

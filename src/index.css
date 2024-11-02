@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'Neutra Text Alt';
+  src: local('Neutra Text Alt'), url(./fonts/neutra-text-alt.otf) format('otf');
+}
+
+body {
+  font-family: Neutra Text Alt, sans-serif;
+}
+
+table thead tr th {
+  background-color: #c0e3e5 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+table tbody tr td {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+table tbody tr :hover {
+  cursor: pointer !important;
+}

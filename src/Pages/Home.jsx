@@ -22,7 +22,7 @@ export default function Home() {
 
       <h2 className='mt-5 mb-4 text-center'>Features</h2>
 
-      <Row>
+      <Row className='mb-5'>
         <Col>
           <Card>
             <Card.Body>
